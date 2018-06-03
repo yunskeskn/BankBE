@@ -1,6 +1,7 @@
 ﻿using BankBE.Data;
 using BankBE.Request;
 using BankBE.Response;
+using BankBE.Utility;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace BankBE.Controllers
             SaleResponse saleResponse = new SaleResponse();
 
             //token algorihm
-            string token_data = "token is here";
+            string token_data = new Utilities().generateToken(saleRequest);
 
             SalePersistence sp = new SalePersistence();
             long guid = 0;
