@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using BankBE.Request;
 using MySql.Data;
+using MySql.Data.MySqlClient;
 
 namespace BankBE.Data
 {
@@ -28,13 +29,34 @@ namespace BankBE.Data
             }
         }
 
-        public long insertTransaction(SaleRequest saleRequest,string token_data)
+        public long insertTransaction(SaleRequest saleRequest)
         {
-            string sqlString = "Insert into bank_transaction (merchant_no, terminal_no, amount, transaction_status,token_data)values('" + saleRequest.merchant_no + "','" + saleRequest.terminal_no + "'," + saleRequest.amount + ", 'P', '"+token_data+"')";
-            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
+            string sqlStringInsert = "Insert into bank_transaction (merchant_no, terminal_no, amount, transaction_status, merchant_transaction_guid)values('" + saleRequest.merchant_no + "','" + saleRequest.terminal_no + "'," + saleRequest.amount + ", 'P', "+ saleRequest.merchant_transaction_guid +")";
+            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlStringInsert, conn);
             cmd.ExecuteNonQuery();
-            long guid = cmd.LastInsertedId;
-            return guid;
+            long guidTokenless = cmd.LastInsertedId;
+            return guidTokenless;
         }
+
+        public void updateTransactionTokenByGuid(string token_data, long guid)
+        {
+            string sqlStringInsert = "update bank_transaction set token_data = '"+ token_data +"' where guid = "+ guid;
+            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlStringInsert, conn);
+            cmd.ExecuteNonQuery();
+        }
+
+        public String selectTokenDataByGuid(Int64 guid)
+        {
+            MySqlDataReader rdr = null;
+            string sqlStringInsert = "select token_data from bank.bank_transaction where guid = " + guid;
+            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlStringInsert, conn);
+            rdr = cmd.ExecuteReader();
+            if (rdr.Read())
+                return rdr.GetString(0);
+
+            else
+                return "Guid doesn't match!!!";
+        }
+
     }
 }

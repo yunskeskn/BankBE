@@ -34,20 +34,22 @@ namespace BankBE.Controllers
             //dbye token oluşturup kayıt atcak            
 
             SaleResponse saleResponse = new SaleResponse();
+            
+            SalePersistence sp = new SalePersistence();
+            long bankguid = 0;
+            bankguid = sp.insertTransaction(saleRequest);
 
             //token algorihm
-            string token_data = new Utilities().generateToken(saleRequest);
-
-            SalePersistence sp = new SalePersistence();
-            long guid = 0;
-            guid = sp.insertTransaction(saleRequest, token_data);
-
+            
+            string token_data = new Utilities().generateToken(saleRequest, bankguid.ToString());
+            sp.updateTransactionTokenByGuid(token_data, bankguid);
             saleResponse.token_data = token_data;
 
             JObject payLoad = new JObject(
-                new JProperty("error_code", saleResponse.error_code),
-                new JProperty("error_desc", saleResponse.error_desc),
-                new JProperty("token_data", saleResponse.token_data)
+                new JProperty("error_code", "0000000"),
+                new JProperty("error_desc", "Basarili"),
+                new JProperty("token_data", saleResponse.token_data),
+                new JProperty("bank_transaction_guid", bankguid)
             );
 
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(payLoad.ToString()) };
