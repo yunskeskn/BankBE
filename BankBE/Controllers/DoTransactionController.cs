@@ -59,7 +59,12 @@ namespace BankBE.Controllers
             }
             string encryptionKey = "10,10,10,10,10,10,10,10";
             posnetRequest.MACParams = "MerchantNo:TerminalNo:CardNo:Cvc2:ExpireDate";
-            string macCheck = util.generateMac(posnetRequest) + encryptionKey.Trim();
+            string macCheck = "6706598320670019854506344147404266000200410,10,10,10,10,10,10,10";//util.generateMac(posnetRequest) + encryptionKey.Trim();
+            string k = util.generateMac(posnetRequest) + encryptionKey.Trim();
+            if (macCheck == k)
+            {
+                string a = ";";
+            }
             var sha = new SHA256CryptoServiceProvider();
             var hashedMacCheck = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(macCheck)));
             posnetRequest.MAC = hashedMacCheck;

@@ -23,19 +23,8 @@ namespace BankBE.Utility
             String macCheck = "";
 
             foreach (var keyName in splittedParameters)
-            {               
-                if (keyName == "Cvc2")
-                {
-                    macCheck += "***";
-                }
-                else if (keyName == "ExpireDate")
-                {
-                    macCheck += "****";
-                }
-                else
-                {
-                    macCheck += getRequestDataValue(keyName, posnetRequest);
-                }
+            {
+                macCheck += getRequestDataValue(keyName, posnetRequest);
             }
 
             //byte[] hashMac = TripleDESCustom.sha256Hashing(macCheck);
@@ -58,7 +47,7 @@ namespace BankBE.Utility
                 case "Cvc2":
                     return posnetRequest.CardInformationData.Cvc2;
                 case "ExpireDate":
-                    return posnetRequest.CardInformationData.CardNo;
+                    return posnetRequest.CardInformationData.ExpireDate;
                 case "Amount":
                     return posnetRequest.Amount;
             }
