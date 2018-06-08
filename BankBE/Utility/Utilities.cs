@@ -16,46 +16,51 @@ namespace BankBE.Utility
         }
 
         
-        public string generateMacField(SaleRequest saleRequest, String mac_params)
+        public string generateMac(PosnetRequest posnetRequest)
         {
             //MacParams: "MerchantNo:TerminalNo:CardNo:Cvc2:ExpireDate"  - EncryptionKey
-            String[] splittedParameters = mac_params.Split(':');
+            String[] splittedParameters = posnetRequest.MACParams.Split(':');
             String macCheck = "";
 
             foreach (var keyName in splittedParameters)
-            {
-                macCheck += getRequestDataValue(keyName, saleRequest);
+            {               
+                if (keyName == "Cvc2")
+                {
+                    macCheck += "***";
+                }
+                else if (keyName == "ExpireDate")
+                {
+                    macCheck += "****";
+                }
+                else
+                {
+                    macCheck += getRequestDataValue(keyName, posnetRequest);
+                }
             }
-            macCheck += saleRequest.encryption_key;
 
-            byte[] hashMac = TripleDESCustom.sha256Hashing(macCheck);
-            var hashMacStr = Convert.ToBase64String(hashMac);
+            //byte[] hashMac = TripleDESCustom.sha256Hashing(macCheck);
+            //var hashMacStr = Convert.ToBase64String(hashMac);
 
-            //if (saleRequest.mac == hashMacStr)//Gelen data yolda bozulmamışsa...
-            //{
-            //    //if req.isSecure == 'Y'
-            //    decryptedCardInfo = tripleDESCustom.DecryptCBC(db_enc_key, saleRequest.encryption_key);
-            //}
-            return hashMacStr;
+            return macCheck;
         }
 
-        private string getRequestDataValue(string keyName, SaleRequest saleRequest)
+        private string getRequestDataValue(string keyName, PosnetRequest posnetRequest)
         {
 
             switch (keyName)
             {
                 case "MerchantNo":
-                    return saleRequest.merchant_no;
+                    return posnetRequest.MerchantNo;
                 case "TerminalNo":
-                    return saleRequest.terminal_no;
+                    return posnetRequest.TerminalNo;
                 case "CardNo":
-                    return saleRequest.card_no;
+                    return posnetRequest.CardInformationData.CardNo;
                 case "Cvc2":
-                    return saleRequest.cvc2;
+                    return posnetRequest.CardInformationData.Cvc2;
                 case "ExpireDate":
-                    return saleRequest.expire_date;
+                    return posnetRequest.CardInformationData.CardNo;
                 case "Amount":
-                    return saleRequest.amount.ToString();
+                    return posnetRequest.Amount;
             }
             return null;
         }

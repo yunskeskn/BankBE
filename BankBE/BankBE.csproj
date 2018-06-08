@@ -188,6 +188,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\BankSaleController.cs" />
+    <Compile Include="Controllers\DoTransactionController.cs" />
     <Compile Include="Controllers\GetTransactionDetailController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -195,11 +196,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\CardInformationData.cs" />
     <Compile Include="Helper\TripleDESCustom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request\DoTransactionRequest.cs" />
     <Compile Include="Request\GetTransactionDetailRequest.cs" />
+    <Compile Include="Request\PosnetRequest.cs" />
     <Compile Include="Request\SaleRequest.cs" />
+    <Compile Include="Response\DoTransactionResponse.cs" />
     <Compile Include="Response\GetTransactionDetailResponse.cs" />
+    <Compile Include="Response\PosnetResponse.cs" />
     <Compile Include="Response\SaleResponse.cs" />
     <Compile Include="Utility\Utilities.cs" />
   </ItemGroup>
