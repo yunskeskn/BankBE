@@ -17,6 +17,25 @@ namespace BankBE.Controllers
         // GET: api/BankSale
         public IEnumerable<string> Get()
         {
+            //SalePersistence sp = new SalePersistence();
+            //SaleRequest saleRequest = new SaleRequest();
+            //saleRequest.amount = 14;
+            //saleRequest.merchant_no = "6706598320";
+            //saleRequest.terminal_no = "67001985";
+            //saleRequest.merchant_transaction_guid = 1000000000000006;
+            //long guid = sp.insertTransaction(saleRequest);
+
+            //sp.updateTransactionTokenByGuid("Fahrinin canı sıkılıyorrrr......", guid);
+
+            //sp.updateTransactionStatus("C", guid);
+
+            //string a = sp.selectTokenDataByGuid(guid);
+
+            //PosnetRequest pr = sp.selectTransactionByGuid(guid);
+
+            //a = sp.selectMerchantGuidByGuid(guid);
+
+
             return new string[] { "value1", "value2" };
         }
 
@@ -34,13 +53,13 @@ namespace BankBE.Controllers
             //dbye token oluşturup kayıt atcak            
 
             SaleResponse saleResponse = new SaleResponse();
-            
+
             SalePersistence sp = new SalePersistence();
             long bankguid = 0;
             bankguid = sp.insertTransaction(saleRequest);
 
             //token algorihm
-            
+
             string token_data = new Utilities().generateToken(saleRequest, bankguid.ToString());
             sp.updateTransactionTokenByGuid(token_data, bankguid);
             saleResponse.token_data = token_data;

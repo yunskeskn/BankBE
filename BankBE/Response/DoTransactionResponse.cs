@@ -6,18 +6,18 @@ using System.Web;
 
 namespace BankBE.Response
 {
-    [DataContract]
-    public class SaleResponse
+    public class DoTransactionResponse
     {
+        [DataMember(Name = "merchant_name")]
+        public string merchant_name { get; set; }
+
+        [DataMember(Name = "amount")]
+        public double amount { get; set; }
+
         [DataMember(Name = "error_code")]
         public string error_code { get; set; }
 
         [DataMember(Name = "error_desc")]
         public string error_desc { get; set; }
-
-        [DataMember(Name = "token_data")]
-        public string token_data { get; set; }
-
-
     }
 }
