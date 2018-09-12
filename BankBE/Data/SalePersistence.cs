@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BankBE.Request;
+using BankBE.Response;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 
@@ -45,17 +46,63 @@ namespace BankBE.Data
             cmd.ExecuteNonQuery();
         }
 
+        public void updateTransactionStatus(string status, long guid)
+        {
+            string sqlStringInsert = "update bank_transaction set transaction_status = '" + status + "' where guid = " + guid;
+            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlStringInsert, conn);
+            cmd.ExecuteNonQuery();
+
+        }
+
         public String selectTokenDataByGuid(Int64 guid)
         {
             MySqlDataReader rdr = null;
             string sqlStringInsert = "select token_data from BANK_TRANSACTION where guid = " + guid;
             MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlStringInsert, conn);
             rdr = cmd.ExecuteReader();
+            String returnData = "";
             if (rdr.Read())
-                return rdr.GetString(0);
-
+            {
+                returnData = rdr.GetString(0);
+            }
             else
-                return "Guid doesn't match!!!";
+            {
+                returnData = "Guid doesn't match!!!";
+            }
+            rdr.Close();
+            return returnData;
+                
+        }
+
+        public PosnetRequest selectTransactionByGuid(Int64 guid)
+        {
+            PosnetRequest posnetRequest = new PosnetRequest();
+            MySqlDataReader rdr = null;
+            string sqlStringInsert = "select merchant_no, terminal_no, amount from bank.bank_transaction where guid = " + guid;
+            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlStringInsert, conn);
+            rdr = cmd.ExecuteReader(); 
+            if (rdr.Read())
+            {
+                posnetRequest.MerchantNo = rdr.GetString(0);
+                posnetRequest.TerminalNo = rdr.GetString(1);
+                posnetRequest.Amount = (Convert.ToDouble(rdr.GetString(2))*100).ToString();
+            }
+            rdr.Close();
+            return posnetRequest;
+        }
+
+        public string selectMerchantGuidByGuid(Int64 guid)
+        {
+            MySqlDataReader rdr = null;
+            string sqlStringInsert = "select merchant_transaction_guid from bank.bank_transaction where guid = " + guid;
+            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlStringInsert, conn);
+            rdr = cmd.ExecuteReader();
+            if (rdr.Read())
+            {
+                return rdr.GetString(0);                
+            }
+            rdr.Close();
+            return "";
         }
 
         public PosnetRequest selectTransactionByGuid(Int64 guid)
